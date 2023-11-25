@@ -3,6 +3,8 @@
 #include <random>
 #include "string.h"
 
+namespace area51
+{
 static void BM_uuid_from_faker(benchmark::State& state)
 {
     // TODO: Need seed
@@ -10,7 +12,7 @@ static void BM_uuid_from_faker(benchmark::State& state)
 
     for (auto _ : state)
     {
-        auto s = uuid(gen);
+        auto s = String::uuid(gen);
         benchmark::DoNotOptimize(s);
     }
 }
@@ -41,3 +43,5 @@ static void BM_uuid_8_like_std_sample(benchmark::State& state)
     }
 }
 BENCHMARK(BM_uuid_8_like_std_sample);
+
+}

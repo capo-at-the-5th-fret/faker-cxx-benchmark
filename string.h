@@ -6,11 +6,16 @@
 #include <sstream>
 #include "random_generator.h"
 
+namespace area51
+{
+class String
+{
+public:
 // NOTE: faker lib has a warning in RandomGenerator that is treated as an error.
 // A version of RandomGenerator that fixes this warning is used instead. The
 // following code is copied from faker
 template <typename T = std::mt19937>
-std::string uuid(RandomGenerator<T> gen = RandomGenerator<std::mt19937>{})
+static std::string uuid(RandomGenerator<T> gen = RandomGenerator<std::mt19937>{})
 {
     static std::uniform_int_distribution<> dist(0, 15);
     static std::uniform_int_distribution<> dist2(8, 11);
@@ -53,7 +58,7 @@ std::string uuid(RandomGenerator<T> gen = RandomGenerator<std::mt19937>{})
 
     return ss.str();
 }
-
+};
 
 #if 0
 template <typename URBG>
@@ -879,3 +884,4 @@ std::string uuid_9(RandomGenerator<T>& gen = RandomGenerator<std::mt19937>{})
     return ret;
 }
 #endif
+}

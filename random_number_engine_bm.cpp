@@ -1,19 +1,19 @@
 #include <benchmark/benchmark.h>
 #include <random>
-#include <faker-cxx/types/RandomGenerator.h>
-#include <faker-cxx/String.h>
 #include <xoshiro.h>
 #include <pcg_random.hpp>
+#include "random_generator.h"
+#include "string.h"
 
-using namespace faker;
-
+namespace area51
+{
 static void BM_rng_mt19937(benchmark::State& state)
 {
     RandomGenerator<std::mt19937> gen;
 
     for (auto _ : state)
     {
-        auto uuid = faker::String::uuid(gen);
+        auto uuid = String::uuid(gen);
         benchmark::DoNotOptimize(uuid);
     }
 }
@@ -25,7 +25,7 @@ static void BM_rng_mt19937_64(benchmark::State& state)
 
     for (auto _ : state)
     {
-        auto uuid = faker::String::uuid(gen);
+        auto uuid = String::uuid(gen);
         benchmark::DoNotOptimize(uuid);
     }
 }
@@ -37,7 +37,7 @@ static void BM_rng_xoshiro_star_star_64(benchmark::State& state)
 
     for (auto _ : state)
     {
-        auto uuid = faker::String::uuid(gen);
+        auto uuid = String::uuid(gen);
         benchmark::DoNotOptimize(uuid);
     }
 }
@@ -49,7 +49,7 @@ static void BM_rng_pcg_64(benchmark::State& state)
 
     for (auto _ : state)
     {
-        auto uuid = faker::String::uuid(gen);
+        auto uuid = String::uuid(gen);
         benchmark::DoNotOptimize(uuid);
     }
 }
@@ -131,3 +131,5 @@ static void BM_pcg64_sv(benchmark::State& state)
 }
 BENCHMARK(BM_pcg64_sv);
 #endif
+
+}

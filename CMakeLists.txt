@@ -20,7 +20,6 @@ if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
 endif()
 
 add_subdirectory(extern/xoshiro)
-add_subdirectory(extern/faker-cxx)
 
 include(FetchContent)
 
@@ -39,6 +38,6 @@ add_executable(benchmark_runner
 )
 
 target_include_directories(benchmark_runner PRIVATE extern/pcg-cpp/include)
-target_link_libraries(benchmark_runner PRIVATE faker-cxx xoshiro::xoshiro)
+target_link_libraries(benchmark_runner PRIVATE xoshiro::xoshiro)
 target_link_libraries(benchmark_runner PRIVATE benchmark::benchmark benchmark::benchmark_main)
 #target_compile_features(benchmark_runner PUBLIC cxx_std_23)

@@ -5,6 +5,8 @@
 // NOTE: faker lib has a warning in RandomGenerator that is treated as an error.
 // A custom RandomGenerator that fixes this warning is used instead.
 
+namespace area51
+{
 template <typename T>
 requires std::uniform_random_bit_generator<T>
 class RandomGenerator
@@ -29,3 +31,5 @@ public:
 private:
     T generator_;
 };
+
+}
