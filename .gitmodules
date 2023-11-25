@@ -1,0 +1,9 @@
+[submodule "extern/faker-cxx"]
+	path = extern/faker-cxx
+	url = https://github.com/cieslarmichal/faker-cxx.git
+[submodule "extern/pcg-cpp"]
+	path = extern/pcg-cpp
+	url = https://github.com/imneme/pcg-cpp.git
+[submodule "extern/xoshiro"]
+	path = extern/xoshiro
+	url = https://gitlab.com/nssn/xoshiro.git
