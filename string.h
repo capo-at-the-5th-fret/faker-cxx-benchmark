@@ -721,7 +721,7 @@ std::string uuid_8(RandomGenerator<T> gen = RandomGenerator<std::mt19937>{})
 
 template <typename Gen>
 requires (std::uniform_random_bit_generator<std::remove_reference_t<Gen>>)
-std::string uuid_8_like_std_sample(Gen&& gen = std::mt19937{}(std::random_device{}()))
+std::string uuid_8_like_std_sample(Gen&& gen)
 {
     // uuid v4 format
     // b = random bit (0 or 1)
