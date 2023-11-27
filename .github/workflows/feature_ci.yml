@@ -12,9 +12,9 @@ jobs:
     strategy:
       matrix:
         config:
-          - { name: "windows (msvc)", os: windows-latest, cc: "cl", cxx: "cl", target_path: "./Release/benchmark_runner", ccache_variant: ccache }
-          - { name: "ubuntu (gcc)", os: ubuntu-latest, cc: "gcc", cxx: "g++-13", target_path: "./benchmark_runner", ccache_variant: ccache }
-          - { name: "macos (clang)", os: macos-latest, cc: "clang", cxx: "$(brew --prefix llvm@15)/bin/clang++", target_path: "./benchmark_runner", ccache_variant: ccache }
+          - { name: "windows (msvc)", os: windows-latest, cc: "cl", cxx: "cl", ccache_variant: ccache }
+          - { name: "ubuntu (gcc)", os: ubuntu-latest, cc: "gcc", cxx: "g++-13", ccache_variant: ccache }
+          - { name: "macos (clang)", os: macos-latest, cc: "clang", cxx: "$(brew --prefix llvm@15)/bin/clang++", ccache_variant: ccache }
 
     name: ${{ matrix.config.name }}
 
