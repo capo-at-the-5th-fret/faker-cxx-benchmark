@@ -7,6 +7,9 @@ on:
   #pull_request:
     #branches: [ "main", "fix/*" ]
 
+env:
+  BUILD_TYPE: Release
+  
 jobs:
   build:
     runs-on: ${{ matrix.config.os }}
@@ -14,7 +17,7 @@ jobs:
     strategy:
       matrix:
         config:
-          - { name: "windows (msvc)", os: windows-latest, cc: "cl", cxx: "cl", target_path: "./Release/benchmark_runner", ccache_variant: ccache }
+          - { name: "windows (msvc)", os: windows-latest, cc: "cl", cxx: "cl", target_path: "./${{env.BUILD_TYPE}}/benchmark_runner", ccache_variant: ccache }
           #- { name: "windows (clang)", os: windows-latest, cc: "clang", cxx: "clang++", ccache_variant: sccache }
           - { name: "ubuntu (gcc)", os: ubuntu-latest, cc: "gcc", cxx: "g++-13", target_path: "./benchmark_runner", ccache_variant: ccache }
           #- { name: "ubuntu (clang)", os: ubuntu-latest, cc: "clang", cxx: "clang++", ccache_variant: ccache }
@@ -48,7 +51,7 @@ jobs:
         run: >-
           cmake -B ${{ steps.strings.outputs.build-output-dir }}
           -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
-          -DCMAKE_BUILD_TYPE=Release
+          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
           -S ${{ github.workspace }}
 
       - name: Configure CMake (Ccache)
@@ -57,12 +60,12 @@ jobs:
           cmake -B ${{ steps.strings.outputs.build-output-dir }}
           -D CMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.config.ccache_variant }}
           -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
-          -DCMAKE_BUILD_TYPE=Release
+          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
           -S ${{ github.workspace }}
 
       - name: Build
         # Build your program with the given configuration. Note that --config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
-        run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config Release
+        run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ env.BUILD_TYPE }}
   
       - name: Benchmark
         working-directory: ${{github.workspace}}/build
