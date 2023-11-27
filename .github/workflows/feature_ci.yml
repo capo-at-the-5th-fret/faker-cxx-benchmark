@@ -5,6 +5,9 @@ on:
     branches-ignore: ['main', 'fix/*']
   pull_request:
 
+env:
+  BUILD_TYPE: Debug
+
 jobs:
   build:
     runs-on: ${{ matrix.config.os }}
@@ -43,7 +46,7 @@ jobs:
         run: >-
           cmake -B ${{ steps.strings.outputs.build-output-dir }}
           -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
-          -DCMAKE_BUILD_TYPE=Debug
+          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
           -S ${{ github.workspace }}
 
       - name: Configure CMake (Ccache)
@@ -52,9 +55,9 @@ jobs:
           cmake -B ${{ steps.strings.outputs.build-output-dir }}
           -D CMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.config.ccache_variant }}
           -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
-          -DCMAKE_BUILD_TYPE=Debug
+          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
           -S ${{ github.workspace }}
 
       - name: Build
         # Build your program with the given configuration. Note that --config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
-        run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config Debug
+        run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ env.BUILD_TYPE }}
