@@ -31,7 +31,7 @@ jobs:
         if: matrix.config.ccache_variant
         uses: hendrikmuhs/ccache-action@v1.2
         with:
-          key: ${{ github.job }}-${{ matrix.os }} # Eg. "some_build-ubuntu-latest"
+          key: ${{ github.job }}-${{ matrix.config.os }}
           variant: ${{ matrix.config.ccache_variant }}
 
       - name: Set reusable strings
