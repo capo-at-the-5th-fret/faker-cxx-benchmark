@@ -6,15 +6,27 @@ on:
     branches: [ "main", "fix/*" ]
   #pull_request:
     #branches: [ "main", "fix/*" ]
+
+env:
+  BUILD_TYPE: Release
   
 jobs:
+  compute:
+    runs-on: ${{ matrix.config.os }}
+    outputs:
+      BUILD_TYPE: ${{ env.BUILD_TYPE }}
+    steps:
+      - name: Compute Outputs
+        run: |
+          echo "BUILD_TYPE=${{ env.BUILD_TYPE }}" >> $GITHUB_OUTPUT
+      
   build:
     runs-on: ${{ matrix.config.os }}
 
     strategy:
       matrix:
         config:
-          - { name: "windows (msvc)", os: windows-latest, cc: "cl", cxx: "cl", target_path: "./${{env.BUILD_TYPE}}/benchmark_runner", ccache_variant: ccache }
+          - { name: "windows (msvc)", os: windows-latest, cc: "cl", cxx: "cl", target_path: "./${{ needs.compute.outputs.BUILD_TYPE }}/benchmark_runner", ccache_variant: ccache }
           #- { name: "windows (clang)", os: windows-latest, cc: "clang", cxx: "clang++", ccache_variant: sccache }
           - { name: "ubuntu (gcc)", os: ubuntu-latest, cc: "gcc", cxx: "g++-13", target_path: "./benchmark_runner", ccache_variant: ccache }
           #- { name: "ubuntu (clang)", os: ubuntu-latest, cc: "clang", cxx: "clang++", ccache_variant: ccache }
@@ -40,7 +52,6 @@ jobs:
         shell: bash
         run: |
           echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
-          echo "BUILD_TYPE=Release" >> $GITHUB_ENV
 
       - name: Configure CMake
         if: ${{ !matrix.config.ccache_variant }}
