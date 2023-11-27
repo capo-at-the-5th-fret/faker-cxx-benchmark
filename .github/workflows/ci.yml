@@ -14,11 +14,11 @@ jobs:
     strategy:
       matrix:
         config:
-          - { name: "windows (msvc)", os: windows-latest, cc: "cl", cxx: "cl", ccache_variant: ccache }
+          #- { name: "windows (msvc)", os: windows-latest, cc: "cl", cxx: "cl", ccache_variant: ccache }
           #- { name: "windows (clang)", os: windows-latest, cc: "clang", cxx: "clang++", ccache_variant: sccache }
           - { name: "ubuntu (gcc)", os: ubuntu-latest, cc: "gcc", cxx: "g++-13", ccache_variant: ccache }
           #- { name: "ubuntu (clang)", os: ubuntu-latest, cc: "clang", cxx: "clang++", ccache_variant: ccache }
-          - { name: "macos (clang)", os: macos-latest, cc: "clang", cxx: "$(brew --prefix llvm@15)/bin/clang++" } #, ccache_variant: ccache }
+          #- { name: "macos (clang)", os: macos-latest, cc: "clang", cxx: "$(brew --prefix llvm@15)/bin/clang++" }, ccache_variant: ccache }
           #- { name: "macos (gcc)", os: macos-latest, cc: "gcc", cxx: "g++", ccache_variant: ccache }
 
     name: ${{ matrix.config.name }}
@@ -33,7 +33,7 @@ jobs:
         with:
           key: ${{ github.job }}-${{ matrix.os }} # Eg. "some_build-ubuntu-latest"
           variant: ${{ matrix.config.ccache_variant }}
-  
+
       - name: Set reusable strings
         # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
         id: strings
@@ -42,10 +42,20 @@ jobs:
           echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
       - name: Configure CMake
+        if: ${{ !matrix.config.ccache_variant }}
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
         # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-        run: >
+        run: >-
           cmake -B ${{ steps.strings.outputs.build-output-dir }}
+          -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
+          -DCMAKE_BUILD_TYPE=Release
+          -S ${{ github.workspace }}
+
+      - name: Configure CMake (Ccache)
+        if: matrix.config.ccache_variant
+        run: >-
+          cmake -B ${{ steps.strings.outputs.build-output-dir }}
+          -D CMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.config.ccache_variant }}
           -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
           -DCMAKE_BUILD_TYPE=Release
           -S ${{ github.workspace }}
