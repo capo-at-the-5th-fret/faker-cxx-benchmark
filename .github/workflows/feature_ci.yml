@@ -1,7 +1,6 @@
 name: Continuous Integration (Feature Branches)
 
 on:
-  workflow_dispatch:
   push:
     branches-ignore: ['main', 'fix/*']
   pull_request:
