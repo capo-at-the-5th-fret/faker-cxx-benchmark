@@ -1,0 +1,43 @@
+name: Continuous Integration (Feature Branches)
+
+on:
+  push:
+    branches-ignore: ['main', 'fix/*']
+  pull_request:
+
+jobs:
+
+  windows:
+    strategy:
+      matrix:
+        config:
+          - { name: "windows", os: "windows-latest", ccache_variant: "ccache" }
+
+    runs-on: ${{ matrix.config.os }}
+
+    name: ${{ matrix.config.name }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Ccache
+        if: matrix.config.ccache_variant
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: ${{ github.job }}-${{ matrix.os }}
+          variant: ${{ matrix.config.ccache_variant }}
+
+      - name: Configure CMake
+        if: ${{ !matrix.config.ccache_variant }}
+        run: cmake -B ./build
+
+      - name: Configure CMake (Ccache)
+        if: matrix.config.ccache_variant
+        run: >-
+          cmake -B ./build
+          -D CMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.config.ccache_variant }}
+
+      - name: Build
+        working-directory: build
+        run: cmake --build . --config Debug -j 2
