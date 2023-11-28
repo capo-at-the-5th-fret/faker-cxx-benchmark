@@ -12,7 +12,7 @@ env:
   
 jobs:
   compute:
-    runs-on: ${{ matrix.config.os }}
+    runs-on: ubuntu-latest
     outputs:
       BUILD_TYPE: ${{ env.BUILD_TYPE }}
     steps:
